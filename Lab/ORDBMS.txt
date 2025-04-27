@@ -1,0 +1,61 @@
+
+---------Creating the PhoneList_vartyp Type----------
+CREATE TYPE PhoneList_vartyp AS VARRAY(10) OF VARCHAR2(20);
+
+--------Creating the Address Object---------------
+CREATE TYPE Address_objtyp AS OBJECT (
+  Street         VARCHAR2(200),
+  City           VARCHAR2(200)
+  ) 
+  
+ -------Creating the  Customer_objtyp object ----------
+  CREATE TYPE Customer_objtyp AS OBJECT (
+  CustNo           NUMBER,
+  CustName         VARCHAR2(200),
+  Address_obj      Address_objtyp,
+  PhoneList_var    PhoneList_vartyp,
+
+  member function getCustNo Return Number
+  ) 
+  NOT Final ;
+
+--------Creating the Customer_objtab Table---------------
+CREATE TABLE Customer_objtab OF Customer_objtyp (CustNo PRIMARY KEY) 
+   OBJECT IDENTIFIER IS PRIMARY KEY;
+   
+    
+ -------Creating the PurchaseOrder_objtyp Type Body-------    
+   CREATE OR REPLACE TYPE BODY Customer_objtyp AS 
+   MEMBER FUNCTION getCustNo RETURN NUMBER is   
+      BEGIN  
+         RETURN CustNo;   
+      END;   
+	End;
+	
+	
+-------------Query-------------
+	
+	select tab.getCustNo() from CustomerTab tab;
+   
+   ---------------------------------
+   CREATE OR REPLACE Type  PurchaseOrderO as Object
+    (
+       OrderId NUMBER,
+       OrderDate DATE,
+       Cust_Ref REF Customer_objtyp
+    );
+    /  
+
+------------Creating the Purhase Order Table---------------	
+	 CREATE TABLE PORDERT OF PurchaseOrderO
+    (
+       PRIMARY KEY (OrderId),
+       FOREIGN KEY (Cust_Ref) REFERENCES Customer_objtab)
+       Object identifier is primary key
+    ;
+--------- Inserting Values in POrderT-----------------	
+  SQL> insert into POrderT
+  2  select 10,SYSDATE,REF(c) from customerTab c where c.custno=123
+  3  ;
+  
+   	

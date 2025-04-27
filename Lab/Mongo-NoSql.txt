@@ -1,0 +1,25 @@
+download and install (MongoDB Community Edition and mongosh) https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/
+Add the mongosh binary to your PATH environment variable.
+Connect to a Specific Database
+C:\Users\lenovo>Mongosh
+use example_db =>use command is typically used to switch to a specific database, creates a 
+new database if one does not exist.
+
+db=> Verify the name of the current database
+
+show dbs=>List all the databases on your system
+NoSQL has collections instead of tables. These collections don’t have any structure, and you 
+insert data, as documents, into the collection.
+
+db.Subjects.insertMany([ { "Id": 1, "Code": "ADBMS", "Name": "Advance DBMS" },
+ { "Id": 2, "Code": "AJP", "Name": "Advance JP" }])
+ 
+db.Subjects.find()=>verify saved data
+db.Students.insertOne({ "Id": 1, "Name": "Ram", "Subjects": [1,2] })
+
+db.Subjects.drop()=>Removes the specified collection from the database.
+
+db.dropDatabase() =>remove the database from your machine
+
+list of commands listed in the below link
+https://www.mongodb.com/docs/manual/reference/method/js-collection/

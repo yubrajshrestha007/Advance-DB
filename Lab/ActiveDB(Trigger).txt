@@ -1,0 +1,96 @@
+ 
+// Create Table Employee and Emp_log
+ CREATE TABLE Employee(EmployeeId NUMBER, Log_date DATE, salary NUMBER );
+ CREATE TABLE Emp_log( Emp_id NUMBER, Log_date DATE, Old_salary NUMBER,Action VARCHAR2(20));
+ ------------------------------------
+ //Statement level trigger
+ ------------------------------------
+ CREATE OR REPLACE TRIGGER EmployeeCount
+    AFTER INSERT ON Employee
+    DECLARE n INTEGER;
+    BEGIN
+       SELECT COUNT(*) INTO n FROM Employee;
+       DBMS_OUTPUT.PUT_LINE('There are now '|| n ||' employees.');
+    End;
+    /
+ 
+ //Configure buffer
+  set serveroutput on size 30000;
+  
+  //insert data into employee table
+   INSERT INTO Employee values (1,SYSDATE,2000);  
+  There are now 1 employees.
+  => message should be appear.
+  
+  -----------------------------------------------
+  //Row level trigger
+  -----------------------------------------------
+   CREATE OR REPLACE TRIGGER EmpSalaryLog
+    BEFORE UPDATE OF Salary ON Employee
+    FOR EACH ROW
+    WHEN (Old.Salary<10000)
+    BEGIN
+       INSERT INTO Emp_log values (:NEW.EmployeeId,SYSDATE,:Old.Salary,'old salary');
+    End;
+    /
+
+//update employee table
+//update Employee set salary=40000;
+
+//SELECT emp_log table
+ select *from Emp_log;
+trigger affect:updated record should be inserted in emp_log table
+--------------------------------
+Instead of TRIGGER
+------------------------------
+
+//Create table trainer
+create table trainer(full_name varchar2(300));
+
+//create table subject
+CREATE TABLE Subject(subject_name varchar2(200))
+
+//create view 
+create view vw_SubjectTrainer As
+    SELECT full_name,subject_name from trainer,subject;
+
+
+//try to insert record using view
+ insert into vw_SubjectTrainer values('Ram xyz','Java');	
+	throws exception because DML operations not supported in the view definition.
+
+//Instead of trigger
+ CREATE OR REPLACE TRIGGER SubjectTeacher
+    INSTEAD OF INSERT ON vw_SubjectTrainer
+    FOR EACH ROW
+    BEGIN
+       INSERT INTO trainer Values(:NEW.full_name);
+       INSERT INTO Subject values (:NEW.subject_name);
+    End;
+    /
+
+//Insert data using vw_SubjectTrainer
+insert into vw_SubjectTrainer values('Ram xyz','Java');
+
+//Select tables
+ select *from trainer;
+ select *from Subject;
+
+	
+
+
+
+
+
+	
+	
+
+
+	
+	
+  
+ 
+  
+  
+ 
+ 

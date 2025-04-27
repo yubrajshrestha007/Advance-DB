@@ -1,0 +1,53 @@
+/*
+ * Traditional(non-spatial) DBMS systems are efficient for non-spatial queries (list the names of top ten students of the class), but not for non spatial queries(list names of all medication stores which are within 5KM of Baneshwor).
+ 
+ * Non-spatial data(Course, Departments, Designations, jobDescription etc) 
+	and spatial data(setellites imagery,Rivers,Road,Villeges,weather and climate data etc).
+ * SDBMS supports spatial data types (e.g. Polygon), operations(e.g. overlap), spatial indices(e.g. R- trees) 
+	and callable from SQL3 query language. 
+ 
+ * GIS is a software to visualize and analyze spatial data using spatial analysis functions.
+    -Search( search for all the schools within a particular zip code)
+	-Location analysis (Corridor- route between two locations)
+	-Terrain analysis (Slope,Drainage network)
+	-Flow analysis (Connectivity- identify all the roads that are connected to a particular highway,Shortest path)
+	-Distribution (Proximity- identify all the houses that are located within 100 meters of a park.
+		Nearest neighbor-  identify the closest hospital to each house in a city.)
+	-Measurements(Distance,Perimeter-total length of the boundary of a feature.)
+
+*/
+
+
+--IMPLEMENTATION
+CREATE TABLE KathmanduPlaces (
+    PlaceID INT PRIMARY KEY,
+    PlaceName NVARCHAR(100),
+    Location geography
+);
+
+
+-- Inserting sample data for Kathmandu places
+INSERT INTO KathmanduPlaces (PlaceID, PlaceName, Location)
+VALUES
+    (1, N'Swayambhunath Stupa', geography::Point(27.7146, 85.2907, 4326)),
+    (2, N'Boudhanath Stupa', geography::Point(27.7211, 85.3619, 4326)),
+    (3, N'Pashupatinath Temple', geography::Point(27.7100, 85.3489, 4326)),
+    (4, N'Durbar Square', geography::Point(27.7049, 85.3076, 4326));
+
+	
+-- Find places within 5 kilometers of Swayambhunath Stupa
+DECLARE @centerPoint geography;
+SET @centerPoint = geography::Point(27.7146, 85.2907, 4326); -- Coordinates of Swayambhunath Stupa
+
+SELECT PlaceName
+FROM KathmanduPlaces
+WHERE Location.STDistance(@centerPoint) <= 5000; 
+
+
+-- finding the nearest place to a specific location,
+DECLARE @currentLocation geography;
+SET @currentLocation = geography::Point(27.6892, 85.3467, 4326); -- Specify your current coordinates
+
+SELECT TOP 1 PlaceName, Location.STDistance(@currentLocation) AS Distance
+FROM KathmanduPlaces
+ORDER BY Location.STDistance(@currentLocation);

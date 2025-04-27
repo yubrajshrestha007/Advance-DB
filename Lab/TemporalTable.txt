@@ -1,0 +1,40 @@
+//Creating tamporal table
+CREATE TABLE dbo.Temporal_employee(
+  EMPNO   INT,
+  SAL      NUMERIC(7,2),
+  DEPTNO   INT,
+     CONSTRAINT EMP_PK PRIMARY KEY (EMPNO),
+   ValidStartTime datetime2 GENERATED ALWAYS AS ROW START NOT NULL
+  ,ValidEndTime datetime2 GENERATED ALWAYS AS ROW END NOT NULL
+  ,PERIOD FOR SYSTEM_TIME (ValidStartTime,ValidEndTime)) WITH (SYSTEM_VERSIONING = ON);
+  
+ //Select Temporal_employee and inner [dbo].[MSSQL_TemporalHistoryFor_706101556]
+	select *From Temporal_employee
+    select *from [dbo].[MSSQL_TemporalHistoryFor_706101556]
+	
+	Output=> no record found.
+
+//insert data into employee table
+
+  insert into Temporal_employee(EMPNO,SAL,DEPTNO)
+  values (3,50000,1)
+  
+ //Select Temporal_employee and inner [dbo].[MSSQL_TemporalHistoryFor_706101556]
+	select *From Temporal_employee
+    select *from [dbo].[MSSQL_TemporalHistoryFor_706101556]
+	
+//Update 
+  update Temporal_employee
+  set SAL=25000
+  
+   //Select Temporal_employee and inner [dbo].[MSSQL_TemporalHistoryFor_706101556]
+	select *From Temporal_employee
+    select *from [dbo].[MSSQL_TemporalHistoryFor_706101556]
+  
+  //Delete record and select both table
+    delete from Temporal_employee
+   
+  select *From Temporal_employee
+  select *from [dbo].[MSSQL_TemporalHistoryFor_706101556]
+  
+  

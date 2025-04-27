@@ -1,0 +1,63 @@
+Dudective Database
+
+//Facts
+> supervise(james,franklin).
+> supervise(franklin,john).
+> supervise(franklin,ramesh).
+> supervise(franklin,joyce).
+> supervise(james,jennifer).
+> supervise(jennifer,alicia).
+> supervise(jennifer,ahmed).
+
+//Rules
+> superior(X,Y):-supervise(X,Y).
+> superior(X,Y):-supervise(X,Z),superior(Z,Y).
+ 
+// Queries
+ > supervise(james,franklin)?
+Output:	supervise(james, franklin).
+
+> superior(james,franklin)?
+Output: superior(james, franklin).
+
+ superior(james,john)?
+Output: superior(james, john).
+
+> superior(X,Y)?
+Output:
+superior(ahmed, ram).
+superior(james, franklin).
+superior(jennifer, ahmed).
+superior(jennifer, alicia).
+superior(james, jennifer).
+superior(franklin, joyce).
+superior(franklin, ramesh).
+superior(franklin, john).
+superior(james, fanklin).
+superior(james, ahmed).
+superior(james, alicia).
+superior(james, ram).
+superior(jennifer, ram).
+superior(james, joyce).
+superior(james, ramesh).
+superior(james, john).
+
+> superior(franklin,X)?
+Output:
+superior(franklin, joyce).
+superior(franklin, ramesh).
+superior(franklin, john).
+
+> superior(X,ram)?
+Output:
+superior(ahmed, ram).
+superior(james, ram).
+superior(jennifer, ram).
+
+
+
+
+
+
+ 
+
